@@ -1,9 +1,6 @@
 package model;
 
-/*
- * Araç entity class'ı
- * car tablosuna birebir karşılık gelir
- */
+
 public class Car {
 
     private int carId;
@@ -13,7 +10,7 @@ public class Car {
     private String model;
     private int year;
 
-    // 🔹 Veritabanından okurken kullanılacak constructor
+   
     public Car(int carId,
                int userId,
                String plate,
@@ -29,7 +26,7 @@ public class Car {
         this.year = year;
     }
 
-    // 🔹 GUI → Service tarafında yeni araç eklerken kullanılacak
+    
     public Car(int userId,
                String plate,
                String brand,
@@ -43,7 +40,6 @@ public class Car {
         this.year = year;
     }
 
-    // Getter / Setter'lar
     public int getCarId() {
         return carId;
     }

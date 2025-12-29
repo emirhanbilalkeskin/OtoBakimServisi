@@ -44,7 +44,7 @@ public class ServiceDAO {
         return null;
     }
 
-    // Hizmet ekle (ADMIN) - Başarılıysa true döner
+    // Hizmet ekle 
     public boolean addService(Service service) {
         String sql = "INSERT INTO service (name, duration, price) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
@@ -61,7 +61,7 @@ public class ServiceDAO {
         }
     }
 
-    // Hizmet sil (ADMIN) - Başarılıysa true döner
+    // Hizmet sil
     public boolean deleteService(int serviceId) {
         String sql = "DELETE FROM service WHERE service_id = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -75,7 +75,6 @@ public class ServiceDAO {
         }
     }
 
-    // Helper: ResultSet verisini Service nesnesine dönüştürür
     private Service mapRow(ResultSet rs) throws SQLException {
         return new Service(
             rs.getInt("service_id"),

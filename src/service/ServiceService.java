@@ -12,7 +12,7 @@ public class ServiceService {
         serviceDAO = new ServiceDAO();
     }
 
-    // --- OKUMA İŞLEMLERİ ---
+    
     public List<Service> getAllServices() {
         return serviceDAO.getAllServices();
     }
@@ -21,16 +21,16 @@ public class ServiceService {
         return serviceDAO.getServiceById(serviceId);
     }
 
-    // --- YAZMA İŞLEMLERİ ---
+   
 
-    // GUI'den gelen 3 parametreyi kabul eder, kontrol eder ve DAO'ya iletir
+    
     public boolean addService(String name, int duration, double price) {
-        // İş mantığı kontrolü (Validation)
+        // İş mantığı kontrolü 
         if (name == null || name.isEmpty() || price < 0 || duration <= 0) {
             return false;
         }
 
-        // GUI'den gelen verilerle yeni bir Service nesnesi oluşturuyoruz
+       
         // ID otomatik artacağı için 0 veriyoruz
         Service service = new Service(0, name, duration, price);
 

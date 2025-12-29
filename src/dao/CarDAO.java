@@ -36,7 +36,7 @@ public class CarDAO {
         return cars;
     }
 
-    // 🔄 GÜNCELLENDİ: Araç ekleme (Artık sonucun başarılı olup olmadığını döner)
+   
     public boolean addCar(Car car) {
         String sql = "INSERT INTO car (user_id, plate, brand, model, year) VALUES (?, ?, ?, ?, ?)";
 
@@ -50,7 +50,7 @@ public class CarDAO {
             ps.setInt(5, car.getYear());
 
             int affectedRows = ps.executeUpdate();
-            return affectedRows > 0; // Eğer 1 satır eklendiyse true döner
+            return affectedRows > 0;
 
         } catch (SQLException e) {
             System.err.println("Araç ekleme hatası: " + e.getMessage());

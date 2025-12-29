@@ -32,9 +32,7 @@ public class UserDAO {
         return user;
     }
 
-    // 🔥 YENİ EKLENEN: Yeni Kullanıcı Kaydı
     public boolean register(User user) {
-        // user_id otomatik artan (Auto Increment) olduğu için SQL'de yazmıyoruz
         String sql = "INSERT INTO user (name, email, password, role, phone) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseManager.getConnection();
@@ -43,10 +41,10 @@ public class UserDAO {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
-            ps.setString(4, user.getRole()); // Müşteri için "CUSTOMER" gelecek
+            ps.setString(4, user.getRole());
             ps.setString(5, user.getPhone());
 
-            return ps.executeUpdate() > 0; // Eğer 1 satır eklendiyse true döner
+            return ps.executeUpdate() > 0; 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

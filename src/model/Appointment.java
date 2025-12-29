@@ -13,7 +13,7 @@ public class Appointment {
     private LocalTime time;
     private String status; // PENDING, APPROVED, CANCELLED
 
-    // 🔹 FULL CONSTRUCTOR (DAO kullanacak)
+   
     public Appointment(int appointmentId,
                        int userId,
                        int carId,
@@ -31,7 +31,7 @@ public class Appointment {
         this.status = status;
     }
 
-    // 🔹 INSERT için constructor (ID yok)
+   
     public Appointment(int userId,
                        int carId,
                        int serviceId,
@@ -47,7 +47,7 @@ public class Appointment {
         this.status = status;
     }
 
-    // 🔹 GETTER – SETTER
+    
 
     public int getAppointmentId() {
         return appointmentId;

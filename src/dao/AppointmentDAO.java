@@ -10,14 +10,11 @@ import java.util.List;
 
 public class AppointmentDAO {
 
-    /**
-     * 🔥 3 ARAÇLIK KAPASİTE VE ZAMAN ÇAKIŞMA KONTROLÜ
-     * Mantık: 'CANCELLED' olmayan (yani PENDING ve APPROVED) tüm randevuları sayar.
-     */
+     
     public boolean isSlotOccupied(LocalDate date, LocalTime startTime, int durationMinutes) {
         LocalTime endTime = startTime.plusMinutes(durationMinutes);
 
-        // SQL GÜNCELLEMESİ: 'status <> CANCELLED' yaparak bekleyen talepleri de kontenjana dahil ettik.
+       
         String sql = "SELECT COUNT(*) FROM appointment a " +
                      "JOIN service s ON a.service_id = s.service_id " +
                      "WHERE a.appointment_date = ? AND a.status <> 'CANCELLED' AND (" +
@@ -36,7 +33,6 @@ public class AppointmentDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int totalActiveAppointments = rs.getInt(1);
-                    // Konsola bilgi yazdıralım, debug için faydalı olur.
                     System.out.println("Kapasite Kontrol: " + date + " " + startTime + " aralığında " + totalActiveAppointments + " aktif randevu var.");
                     return totalActiveAppointments >= 3; 
                 }

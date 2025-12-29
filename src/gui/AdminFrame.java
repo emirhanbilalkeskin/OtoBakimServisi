@@ -51,8 +51,7 @@ public class AdminFrame extends JFrame {
 
         String[] kolonlar = {"ID", "Müşteri", "Telefon", "Araç/Plaka", "Hizmet", "Tarih/Saat", "Durum"};
         appointmentTableModel = new DefaultTableModel(kolonlar, 0);
-        
-        // 🔥 GÜNCELLENDİ: createStyledTable artık randevu tablosu olduğunu biliyor
+       
         JTable table = createStyledTable(appointmentTableModel, true);
 
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
@@ -99,7 +98,6 @@ public class AdminFrame extends JFrame {
         String[] kolonlar = {"ID", "Hizmet Adı", "Süre (Dk)", "Fiyat (TL)"};
         serviceTableModel = new DefaultTableModel(kolonlar, 0);
         
-        // Hizmet tablosu için renklendirme gerekmediği için false gönderiyoruz
         JTable table = createStyledTable(serviceTableModel, false);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -137,7 +135,7 @@ public class AdminFrame extends JFrame {
         return panel;
     }
 
-    // --- 🔥 GÜNCELLENEN RENKLENDİRME METODU ---
+    
     private JTable createStyledTable(DefaultTableModel model, boolean isAppointmentTable) {
         JTable table = new JTable(model);
         table.setRowHeight(40);
@@ -146,7 +144,7 @@ public class AdminFrame extends JFrame {
         header.setFont(headerFont);
 
         if (isAppointmentTable) {
-            // Durum kolonu (6. index) için özel renklendirici
+           
             table.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -156,7 +154,6 @@ public class AdminFrame extends JFrame {
                         String status = value.toString();
                         setHorizontalAlignment(JLabel.CENTER);
 
-                        // Renk Koşulları
                         if (status.equalsIgnoreCase("Onaylandı")) {
                             c.setForeground(new Color(39, 174, 96)); // Yeşil
                             setFont(new Font("Segoe UI", Font.BOLD, 15));

@@ -3,10 +3,7 @@ package service;
 import dao.UserDAO;
 import model.User;
 
-/*
- * GUI ile DAO arasındaki katman.
- * Kullanıcı işlemlerinin iş mantığı burada yönetilir.
- */
+
 public class UserService {
 
     private UserDAO userDAO;
@@ -20,13 +17,13 @@ public class UserService {
         return userDAO.login(email, password);
     }
 
-    // 🔥 YENİ EKLENEN: Kayıt İşlemi Köprüsü
+    
     // GUI'den gelen User nesnesini DAO'ya gönderir
     public boolean register(User user) {
         return userDAO.register(user);
     }
 
-    // YENİ: Admin panelinde müşteri detaylarını (İsim, Telefon) göstermek için
+    // Admin panelinde müşteri detaylarını (İsim, Telefon) göstermek için
     public User getUserById(int userId) {
         return userDAO.getUserById(userId);
     }

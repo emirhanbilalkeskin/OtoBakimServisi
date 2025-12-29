@@ -1,24 +1,21 @@
 package model;
 
-/*
- * Bu class, database'teki USER tablosuna karşılık gelir.
- * Login işlemleri ve kullanıcı iletişim bilgileri bu class üzerinden yönetilir.
- */
+
 public class User {
 
-    // USER tablosundaki kolonlar
+   
     private int userId;
     private String name;
     private String email;
     private String password;
     private String role; // ADMIN veya CUSTOMER
-    private String phone; // 🔥 Yeni eklenen telefon kolonu
+    private String phone;
 
-    // Boş constructor
+   
     public User() {
     }
 
-    // Tüm alanları alan constructor (phone dahil edildi)
+    
     public User(int userId, String name, String email, String password, String role, String phone) {
         this.userId = userId;
         this.name = name;
@@ -28,7 +25,7 @@ public class User {
         this.phone = phone;
     }
 
-    // Getter - Setter'lar
+    
     public int getUserId() {
         return userId;
     }

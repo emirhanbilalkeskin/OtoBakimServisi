@@ -12,10 +12,10 @@ public class CarService {
         carDAO = new CarDAO();
     }
 
-    // GÜNCELLEME: void yerine boolean döndürerek başarı kontrolü sağlıyoruz
+    
     public boolean addCar(int userId, String plate, String brand, String model, int year) {
         Car car = new Car(
-                0, // carId (AUTO_INCREMENT)
+                0, 
                 userId,
                 plate,
                 brand,
@@ -23,7 +23,7 @@ public class CarService {
                 year
         );
 
-        // DAO'dan dönen sonucu yukarı iletiyoruz (DAO'nuzun da boolean döndüğünden emin olun)
+        
         return carDAO.addCar(car);
     }
     

@@ -11,10 +11,7 @@ public class AppointmentService {
     private AppointmentDAO appointmentDAO = new AppointmentDAO();
     private ServiceService serviceService = new ServiceService();
 
-    /**
-     * 📅 Yeni Randevu Oluşturma
-     * Bu metot, dükkanın 3 araçlık kapasitesini ve hizmet süresini kontrol eder.
-     */
+    
     public boolean createAppointment(int userId, int carId, int serviceId, LocalDate date, LocalTime time) {
         // 1. Hizmet bilgilerini veritabanından çek (Süre bilgisini almak için)
         Service selectedService = serviceService.getServiceById(serviceId);
@@ -45,10 +42,9 @@ public class AppointmentService {
         return appointmentDAO.getAllAppointments();
     }
 
-    /**
-     * 🔄 Randevu Durumunu Güncelle (Onayla/İptal Et)
-     * Admin panelinden gelen 'APPROVED' veya 'CANCELLED' komutlarını işler.
-     */
+    
+      //Randevu Durumunu Güncelle 
+    
     public boolean updateStatus(int appointmentId, String status) {
         return appointmentDAO.updateStatus(appointmentId, status);
     }

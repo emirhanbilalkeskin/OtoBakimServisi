@@ -1,15 +1,12 @@
 package model;
 
-/*
- * Bu class, SERVICE tablosuna karşılık gelir.
- * Bakım hizmetlerini (yağ değişimi, fren bakımı vs.) temsil eder.
- */
+
 public class Service {
 
     // SERVICE tablosundaki kolonlar
     private int serviceId;
     private String name;
-    private int duration;   // dakika cinsinden
+    private int duration;   // dakika 
     private double price;
 
     // Boş constructor
