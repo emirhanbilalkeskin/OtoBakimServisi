@@ -18,14 +18,18 @@ import java.util.List;
 public class AdminFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
+    
+    // Servis Katmanları
     private AppointmentService appointmentService = new AppointmentService();
     private CarService carService = new CarService();
     private ServiceService serviceService = new ServiceService();
     private UserService userService = new UserService();
     
+    // Tablo Modelleri
     private DefaultTableModel appointmentTableModel;
     private DefaultTableModel serviceTableModel;
     
+    // Fontlar
     private Font tableFont = new Font("Segoe UI", Font.PLAIN, 15);
     private Font headerFont = new Font("Segoe UI", Font.BOLD, 15);
     private Font buttonFont = new Font("Segoe UI", Font.BOLD, 14);
@@ -45,6 +49,7 @@ public class AdminFrame extends JFrame {
         add(tabbedPane);
     }
 
+    // --- RANDEVU YÖNETİM PANELİ ---
     private JPanel createAppointmentManagementPanel() {
         JPanel panel = new JPanel(new BorderLayout(15, 15));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -71,63 +76,131 @@ public class AdminFrame extends JFrame {
         return panel;
     }
 
+    // --- HİZMET YÖNETİM PANELİ (YENİLENMİŞ - NİZAMİ) ---
     private JPanel createServiceManagementPanel() {
         JPanel panel = new JPanel(new BorderLayout(15, 15));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JPanel addServicePanel = new JPanel();
-        addServicePanel.setLayout(new BoxLayout(addServicePanel, BoxLayout.Y_AXIS));
-        addServicePanel.setBackground(Color.WHITE);
-        addServicePanel.setBorder(BorderFactory.createTitledBorder("Yeni Hizmet Ekle"));
+        // Form Paneli (GridBagLayout ile hizalı)
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(Color.WHITE);
+        inputPanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200)), 
+                "Yeni Hizmet Ekle", 
+                javax.swing.border.TitledBorder.CENTER, 
+                javax.swing.border.TitledBorder.TOP, 
+                new Font("Segoe UI", Font.BOLD, 14)
+        ));
 
-        JTextField txtServiceName = new JTextField();
-        JTextField txtDuration = new JTextField();
-        JTextField txtPrice = new JTextField();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Margin
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        addServicePanel.add(createLabeledInput("Hizmet Adı:", txtServiceName));
-        addServicePanel.add(createLabeledInput("Süre (Dakika):", txtDuration));
-        addServicePanel.add(createLabeledInput("Fiyat (TL):", txtPrice));
+        // Inputlar
+        JTextField txtServiceName = createStyledTextField();
+        JTextField txtDuration = createStyledTextField();
+        JTextField txtPrice = createStyledTextField();
 
-        JButton btnAddService = createLargeButton("➕ HİZMETİ SİSTEME EKLE", new Color(52, 152, 219));
-        btnAddService.setAlignmentX(Component.CENTER_ALIGNMENT);
-        addServicePanel.add(btnAddService);
-        addServicePanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        // 1. Satır: Hizmet Adı
+        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.weightx = 0.3;
+        JLabel lblName = new JLabel("Hizmet Adı:", SwingConstants.RIGHT);
+        lblName.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 14));
+        inputPanel.add(lblName, gbc);
 
-        panel.add(addServicePanel, BorderLayout.NORTH);
+        gbc.gridx = 1; 
+        gbc.weightx = 0.7;
+        inputPanel.add(txtServiceName, gbc);
 
+        // 2. Satır: Süre
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0.3;
+        JLabel lblDuration = new JLabel("Süre (Dakika):", SwingConstants.RIGHT);
+        lblDuration.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 14));
+        inputPanel.add(lblDuration, gbc);
+
+        gbc.gridx = 1; 
+        gbc.weightx = 0.7;
+        inputPanel.add(txtDuration, gbc);
+
+        // 3. Satır: Fiyat
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0.3;
+        JLabel lblPrice = new JLabel("Fiyat (TL):", SwingConstants.RIGHT);
+        lblPrice.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 14));
+        inputPanel.add(lblPrice, gbc);
+
+        gbc.gridx = 1; 
+        gbc.weightx = 0.7;
+        inputPanel.add(txtPrice, gbc);
+
+        // 4. Satır: Ekle Butonu
+        gbc.gridx = 1; gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.LINE_END; // Sağa yasla
+        
+        JButton btnAddService = createLargeButton("➕ SİSTEME EKLE", new Color(52, 152, 219));
+        btnAddService.setPreferredSize(new Dimension(200, 40));
+        btnAddService.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        inputPanel.add(btnAddService, gbc);
+
+        // Formu sarmala (Ortalamak için)
+        JPanel topWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        inputPanel.setPreferredSize(new Dimension(600, 260));
+        topWrapper.add(inputPanel);
+        panel.add(topWrapper, BorderLayout.NORTH);
+
+        // Tablo
         String[] kolonlar = {"ID", "Hizmet Adı", "Süre (Dk)", "Fiyat (TL)"};
         serviceTableModel = new DefaultTableModel(kolonlar, 0);
-        
         JTable table = createStyledTable(serviceTableModel, false);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
 
+        // Sil Butonu
         JButton btnDeleteService = createLargeButton("🗑️ SEÇİLİ HİZMETİ SİL", new Color(231, 76, 60));
         panel.add(btnDeleteService, BorderLayout.SOUTH);
 
+        // Action Listener - Ekleme
         btnAddService.addActionListener(e -> {
             try {
                 String name = txtServiceName.getText().trim();
-                int duration = Integer.parseInt(txtDuration.getText().trim());
-                double price = Double.parseDouble(txtPrice.getText().trim());
+                String durStr = txtDuration.getText().trim();
+                String priceStr = txtPrice.getText().trim();
+
+                if (name.isEmpty() || durStr.isEmpty() || priceStr.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Lütfen tüm alanları doldurun.");
+                    return;
+                }
+
+                int duration = Integer.parseInt(durStr);
+                double price = Double.parseDouble(priceStr);
 
                 if (serviceService.addService(name, duration, price)) {
                     JOptionPane.showMessageDialog(this, "Hizmet başarıyla eklendi.");
                     loadServices();
                     txtServiceName.setText(""); txtDuration.setText(""); txtPrice.setText("");
                 }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Süre ve Fiyat alanlarına sadece sayı giriniz.");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Hata: Lütfen bilgileri kontrol edin.");
+                JOptionPane.showMessageDialog(this, "Hata: " + ex.getMessage());
             }
         });
 
+        // Action Listener - Silme
         btnDeleteService.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row != -1) {
-                int id = (int) serviceTableModel.getValueAt(row, 0);
-                if (serviceService.deleteService(id)) {
-                    JOptionPane.showMessageDialog(this, "Hizmet silindi.");
-                    loadServices();
+                int confirm = JOptionPane.showConfirmDialog(this, "Bu hizmeti silmek istediğinize emin misiniz?", "Onay", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    int id = (int) serviceTableModel.getValueAt(row, 0);
+                    if (serviceService.deleteService(id)) {
+                        JOptionPane.showMessageDialog(this, "Hizmet silindi.");
+                        loadServices();
+                    }
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "Lütfen silinecek bir hizmet seçin.");
             }
         });
 
@@ -135,7 +208,8 @@ public class AdminFrame extends JFrame {
         return panel;
     }
 
-    
+    // --- YARDIMCI METOTLAR ---
+
     private JTable createStyledTable(DefaultTableModel model, boolean isAppointmentTable) {
         JTable table = new JTable(model);
         table.setRowHeight(40);
@@ -144,7 +218,6 @@ public class AdminFrame extends JFrame {
         header.setFont(headerFont);
 
         if (isAppointmentTable) {
-           
             table.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -155,13 +228,13 @@ public class AdminFrame extends JFrame {
                         setHorizontalAlignment(JLabel.CENTER);
 
                         if (status.equalsIgnoreCase("Onaylandı")) {
-                            c.setForeground(new Color(39, 174, 96)); // Yeşil
+                            c.setForeground(new Color(39, 174, 96));
                             setFont(new Font("Segoe UI", Font.BOLD, 15));
                         } else if (status.equalsIgnoreCase("Beklemede")) {
-                            c.setForeground(new Color(243, 156, 18)); // Turuncu
+                            c.setForeground(new Color(243, 156, 18));
                             setFont(new Font("Segoe UI", Font.BOLD, 15));
                         } else if (status.equalsIgnoreCase("İptal Edildi")) {
-                            c.setForeground(new Color(231, 76, 60)); // Kırmızı
+                            c.setForeground(new Color(231, 76, 60));
                             setFont(new Font("Segoe UI", Font.BOLD, 15));
                         }
                     }
@@ -176,18 +249,16 @@ public class AdminFrame extends JFrame {
         return table;
     }
 
-    private JPanel createLabeledInput(String labelText, JTextField field) {
-        JPanel p = new JPanel();
-        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.setBackground(Color.WHITE);
-        JLabel lbl = new JLabel(labelText);
-        lbl.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 13));
-        lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-        field.setMaximumSize(new Dimension(400, 35));
-        field.setAlignmentX(Component.CENTER_ALIGNMENT);
-        field.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
-        p.add(lbl); p.add(Box.createRigidArea(new Dimension(0, 5))); p.add(field); p.add(Box.createRigidArea(new Dimension(0, 10)));
-        return p;
+    // Yeni stil verilmiş TextField oluşturucu
+    private JTextField createStyledTextField() {
+        JTextField field = new JTextField();
+        field.setPreferredSize(new Dimension(200, 35));
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        field.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)), 
+            BorderFactory.createEmptyBorder(5, 10, 5, 10) // İç boşluk
+        ));
+        return field;
     }
 
     private JButton createLargeButton(String text, Color bg) {

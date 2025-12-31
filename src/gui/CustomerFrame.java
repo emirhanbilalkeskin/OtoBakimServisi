@@ -1,8 +1,8 @@
 package gui;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import model.User;
 import model.Car;
@@ -13,8 +13,8 @@ import service.ServiceService;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.LinkedHashMap; 
 import java.util.Map;
-import java.util.TreeMap;
 
 public class CustomerFrame extends JFrame {
 
@@ -27,7 +27,9 @@ public class CustomerFrame extends JFrame {
 
     private DefaultTableModel appointmentsTableModel;
     private JComboBox<Car> cmbCars = new JComboBox<>();
-    private Map<String, String[]> markaModelMap = new TreeMap<>();
+    
+   
+    private Map<String, String[]> markaModelMap = new LinkedHashMap<>();
 
     private Font labelFont = new Font("Segoe UI Semibold", Font.PLAIN, 15);
     private Font inputFont = new Font("Segoe UI", Font.PLAIN, 15);
@@ -48,7 +50,6 @@ public class CustomerFrame extends JFrame {
         tabbedPane.add("Araçlarım", createCarPanel());
         tabbedPane.add("Randevu Al", createAppointmentPanel());
         tabbedPane.add("Randevularım", createAppointmentsListPanel());
-
        
         tabbedPane.addChangeListener(e -> {
             if (tabbedPane.getSelectedIndex() == 1) { 
@@ -57,11 +58,12 @@ public class CustomerFrame extends JFrame {
         });
 
         add(tabbedPane);
-        refreshCarComboBox(); // İlk açılışta yükle
+        refreshCarComboBox(); 
     }
 
     private void verileriHazirla() {
-        markaModelMap.put("Seçiniz", new String[]{"Önce Marka Seçin"});
+        
+        markaModelMap.put("Marka Seçiniz", new String[]{"Önce Marka Seçiniz"});
         markaModelMap.put("Alfa Romeo", new String[]{"Giulietta", "Giulia", "Stelvio", "Tonale"});
         markaModelMap.put("Audi", new String[]{"A1", "A3", "A4", "A5", "A6", "Q2", "Q3", "Q5", "Q7"});
         markaModelMap.put("BMW", new String[]{"1 Serisi", "2 Serisi", "3 Serisi", "4 Serisi", "5 Serisi", "X1", "X3", "X5"});
@@ -98,7 +100,7 @@ public class CustomerFrame extends JFrame {
         setupInput(txtYil);
 
         JComboBox<String> cmbMarka = new JComboBox<>(markaModelMap.keySet().toArray(new String[0]));
-        JComboBox<String> cmbModel = new JComboBox<>(markaModelMap.get("Seçiniz"));
+        JComboBox<String> cmbModel = new JComboBox<>(markaModelMap.get("Marka Seçiniz")); 
         setupCombo(cmbMarka);
         setupCombo(cmbModel);
 
@@ -144,6 +146,11 @@ public class CustomerFrame extends JFrame {
 
         btnEkle.addActionListener(e -> {
             try {
+                if (cmbMarka.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(this, "Lütfen bir marka seçiniz.");
+                    return;
+                }
+                
                 if (carService.addCar(user.getUserId(), txtPlaka.getText().trim(),
                         (String) cmbMarka.getSelectedItem(), (String) cmbModel.getSelectedItem(),
                         Integer.parseInt(txtYil.getText().trim()))) {
@@ -152,6 +159,7 @@ public class CustomerFrame extends JFrame {
                     refreshCarComboBox();
                     txtPlaka.setText("");
                     txtYil.setText("");
+                    cmbMarka.setSelectedIndex(0); 
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Hata: Bilgileri kontrol ediniz.");
@@ -184,7 +192,7 @@ public class CustomerFrame extends JFrame {
         setupCombo(cmbCars);
         card.add(createLabeledInput("İşlem Yapılacak Araç:", cmbCars));
 
-        // --- HİZMET SEÇİMİ VE SÜRE GÖSTERİMİ DÜZELTMESİ BURADA ---
+        // --- HİZMET SEÇİMİ ---
         JComboBox<Service> cmbServices = new JComboBox<>();
         setupCombo(cmbServices);
         cmbServices.setRenderer(new DefaultListCellRenderer() {
@@ -200,13 +208,12 @@ public class CustomerFrame extends JFrame {
         });
         serviceService.getAllServices().forEach(cmbServices::addItem);
         card.add(createLabeledInput("Hizmet Seçimi:", cmbServices));
-        // ---------------------------------------------------------
 
-        // Tarih Kutuları
+        // --- TARİH KISMI ---
         String[] days = new String[31];
         for (int i = 0; i < 31; i++) days[i] = String.format("%02d", i + 1);
         String[] months = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
-        String[] years = {"2025", "2026"};
+        String[] years = {"2026"}; // SADECE 2026
 
         JComboBox<String> cmbD = new JComboBox<>(days);
         JComboBox<String> cmbM = new JComboBox<>(months);
@@ -215,7 +222,12 @@ public class CustomerFrame extends JFrame {
 
         JPanel dRow = new JPanel(new GridLayout(1, 3, 10, 0));
         dRow.setBackground(Color.WHITE);
-        dRow.add(cmbD); dRow.add(cmbM); dRow.add(cmbY);
+        dRow.add(createDatePart("Gün", cmbD));
+        dRow.add(createDatePart("Ay", cmbM));
+        dRow.add(createDatePart("Yıl", cmbY));
+        
+        dRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60)); 
+
         card.add(createLabeledInput("Tarih:", dRow));
 
         // Saat Kutusu
@@ -245,7 +257,7 @@ public class CustomerFrame extends JFrame {
                     JOptionPane.showMessageDialog(this, "Randevu Oluşturuldu!");
                     loadAppointments();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Uyarı: Seçilen saat dolu veya geçersiz!", "Hata", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Uyarı: Seçilen saat için randevu kotası dolmuştur. Lütfen başka bir saat seçiniz.", "Hata", JOptionPane.WARNING_MESSAGE);
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Hata: Lütfen bilgileri kontrol edin.");
@@ -329,6 +341,18 @@ public class CustomerFrame extends JFrame {
         p.add(Box.createRigidArea(new Dimension(0, 5)));
         p.add(input);
         p.add(Box.createRigidArea(new Dimension(0, 15)));
+        return p;
+    }
+
+    private JPanel createDatePart(String title, JComponent comp) {
+        JPanel p = new JPanel(new BorderLayout());
+        p.setBackground(Color.WHITE);
+        JLabel l = new JLabel(title);
+        l.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        l.setForeground(Color.GRAY);
+        l.setHorizontalAlignment(SwingConstants.CENTER);
+        p.add(l, BorderLayout.NORTH);
+        p.add(comp, BorderLayout.CENTER);
         return p;
     }
 
