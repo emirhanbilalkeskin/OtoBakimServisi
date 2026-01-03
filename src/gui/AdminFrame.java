@@ -76,7 +76,7 @@ public class AdminFrame extends JFrame {
         return panel;
     }
 
-    // --- HİZMET YÖNETİM PANELİ (YENİLENMİŞ - NİZAMİ) ---
+    // --- HİZMET YÖNETİM PANELİ  ---
     private JPanel createServiceManagementPanel() {
         JPanel panel = new JPanel(new BorderLayout(15, 15));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -187,7 +187,7 @@ public class AdminFrame extends JFrame {
             }
         });
 
-        // Action Listener - Silme
+        
         btnDeleteService.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row != -1) {
@@ -208,7 +208,7 @@ public class AdminFrame extends JFrame {
         return panel;
     }
 
-    // --- YARDIMCI METOTLAR ---
+    
 
     private JTable createStyledTable(DefaultTableModel model, boolean isAppointmentTable) {
         JTable table = new JTable(model);
@@ -249,14 +249,13 @@ public class AdminFrame extends JFrame {
         return table;
     }
 
-    // Yeni stil verilmiş TextField oluşturucu
     private JTextField createStyledTextField() {
         JTextField field = new JTextField();
         field.setPreferredSize(new Dimension(200, 35));
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         field.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200)), 
-            BorderFactory.createEmptyBorder(5, 10, 5, 10) // İç boşluk
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
         return field;
     }
