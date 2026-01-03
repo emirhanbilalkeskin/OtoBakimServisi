@@ -276,7 +276,7 @@ public class CustomerFrame extends JFrame {
         appointmentsTableModel = new DefaultTableModel(kolonlar, 0);
         JTable table = createStyledTable(appointmentsTableModel);
 
-        // Durum Renklendirme
+        
         table.getColumnModel().getColumn(5).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
